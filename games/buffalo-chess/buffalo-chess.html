@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>버팔로 체스 | GameTrip</title>
+  <style>
+    :root{--blue:#2f8ff0;--blue-dark:#1874d1;--blue-soft:#eaf4ff;--text:#141719;--sub:#495056;--muted:#848c94;--line:#e9ecef;--bg:#fff;--soft:#f5f7f9;--card:#fff;--shadow:0 10px 28px rgba(20,23,25,.08);--green:#00b894;--red:#ff5b5f;--amber:#ffb340}
+    *{box-sizing:border-box}body{margin:0;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR","Segoe UI",sans-serif;color:var(--text);background:#fff}a{text-decoration:none;color:inherit}button{font-family:inherit}
+    .container{width:min(1160px, calc(100% - 32px));margin:0 auto}.site-header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:50}.header-row{height:76px;display:grid;grid-template-columns:170px 1fr 340px;align-items:center;gap:24px}.logo{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:950;letter-spacing:-.055em}.logo-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#1aa6ff,#2f8ff0);color:#fff;font-size:18px}.search{height:44px;display:flex;align-items:center;gap:10px;background:#f3f5f7;border-radius:8px;padding:0 14px;color:#848c94;font-weight:800}.search input{border:0;background:transparent;outline:0;width:100%;font-size:14px;font-weight:700}.header-actions{display:flex;justify-content:flex-end;gap:10px;font-weight:850;font-size:14px;color:#495056}.home-link{background:var(--blue);color:#fff;border-radius:11px;padding:12px 18px;font-weight:950}.cat-row{border-bottom:1px solid var(--line);background:#fff}.categories{height:54px;display:flex;align-items:center;gap:26px;overflow:auto;white-space:nowrap}.cat{display:flex;gap:8px;align-items:center;font-weight:850;color:#343a40;font-size:14px}.cat:first-child{color:var(--blue)}
+    .game-hero{background:linear-gradient(90deg,#1eb7d3 0%,#3bbdeb 52%,#bfeeff 100%);min-height:176px;border-bottom:1px solid #d6edf5}.game-hero .container{min-height:176px;display:flex;align-items:center;justify-content:space-between;gap:28px}.game-title-block h1{margin:0;font-size:38px;line-height:1.15;letter-spacing:-.055em;color:#fff;font-weight:950}.game-title-block p{margin:10px 0 0;color:rgba(255,255,255,.9);font-size:15px;font-weight:750;line-height:1.6}.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.badge{background:rgba(255,255,255,.9);color:#1874d1;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:950}.hero-icon{font-size:98px;filter:drop-shadow(0 18px 22px rgba(0,80,120,.18))}
+    .topbar{display:none}.game-layout{width:min(1160px, calc(100% - 32px));margin:34px auto 72px;display:grid;grid-template-columns:290px minmax(0,1fr) 290px;gap:22px;align-items:start}.panel,.board-wrap{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.panel{padding:20px}.panel h2{margin:0 0 16px;font-size:18px;letter-spacing:-.035em}.status-card{background:#f8f9fa;border:1px solid #eef1f4;border-radius:14px;padding:16px;margin-bottom:12px}.status-card small{display:block;color:var(--muted);font-size:12px;font-weight:850;margin:12px 0 7px}.status-card small:first-child{margin-top:0}.status-card strong{font-size:18px;letter-spacing:-.035em}.turn-badge{display:inline-flex;align-items:center;gap:8px;margin-top:10px;background:var(--blue-soft);color:var(--blue-dark);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:950}.dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 1.2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}.segmented{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}.segmented.three{grid-template-columns:repeat(3,1fr)}.btn{border:1px solid #dfe5ec;background:#fff;color:#343a40;border-radius:11px;padding:11px 12px;font-weight:950;cursor:pointer;transition:.16s}.btn:hover{background:#f5f7f9}.btn.active,.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.controls{display:grid;gap:8px}.side-note{color:#6b737b;background:#fbfcfd;border:1px solid #edf1f5;border-radius:14px;padding:14px;line-height:1.7;font-size:13px;font-weight:650}.board-wrap{padding:18px}.board-head{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#848c94;font-size:12px;font-weight:950;margin-bottom:14px}.board-head span:nth-child(2){color:var(--blue);background:var(--blue-soft);padding:8px 11px;border-radius:999px}.board{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;padding:14px;border-radius:18px;background:linear-gradient(135deg,#eef8ff,#f8fbff);border:1px solid #d9edf9}.cell{aspect-ratio:1/1;border:1px solid #d6e5ef;background:#fff;border-radius:12px;display:grid;place-items:center;cursor:pointer;position:relative;transition:.12s;box-shadow:inset 0 -1px 0 rgba(20,23,25,.04)}.cell:hover{transform:translateY(-1px);border-color:var(--blue)}.cell.river{background:#e8f7ff}.cell.town{background:#fff6de}.cell.selected{outline:3px solid rgba(47,143,240,.28);border-color:var(--blue)}.cell.valid:after{content:"";position:absolute;width:36%;height:36%;border-radius:50%;background:rgba(47,143,240,.2);border:2px solid rgba(47,143,240,.5)}.piece{width:min(48px,78%);height:min(48px,78%);display:grid;place-items:center;z-index:1}.piece svg{width:100%;height:100%}.move-list{height:386px;overflow:auto;display:flex;flex-direction:column;gap:8px}.move-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #eef1f4;background:#fbfcfd;border-radius:12px;padding:10px;font-size:13px;font-weight:800;color:#495056}.empty-log{color:#8b949e;line-height:1.7;font-size:13px;font-weight:650;padding:12px}.rules-list{line-height:1.85;color:#495056}.modal-body{padding:26px}dialog{border:0;border-radius:18px;box-shadow:0 24px 80px rgba(20,23,25,.22);max-width:520px;width:calc(100% - 32px)}dialog::backdrop{background:rgba(20,23,25,.32);backdrop-filter:blur(6px)}.result-title{margin:0 0 8px;font-size:30px;font-weight:950;letter-spacing:-.05em}
+    @media(max-width:980px){.header-row{grid-template-columns:1fr;gap:12px;height:auto;padding:14px 0}.header-actions{justify-content:flex-start}.game-hero .container{align-items:flex-start;flex-direction:column;padding:28px 0}.hero-icon{display:none}.game-layout{grid-template-columns:1fr}.board{gap:4px;padding:8px}.piece{width:min(44px,78%)}}
+    @media(max-width:520px){.container,.game-layout{width:calc(100% - 24px)}.game-title-block h1{font-size:31px}.categories{gap:18px}.panel,.board-wrap{border-radius:14px;padding:14px}.cell{border-radius:8px}.piece{width:min(32px,78%)}}
+  </style>
+</head>
+<body>
+  <header class="site-header"><div class="container header-row"><a class="logo" href="../../index.html"><span class="logo-mark">G</span><span>GameTrip</span></a><label class="search"><span>🔍</span><input placeholder='"버팔로" "오목" 검색' /></label><div class="header-actions"><button class="btn" style="width:auto" id="rulesBtn">게임 방법</button><button class="btn primary" style="width:auto" id="resetBtnTop">새 게임</button><a class="home-link" href="../../index.html">메인으로</a></div></div></header>
+  <nav class="cat-row"><div class="container categories"><a class="cat" href="../../index.html">🎲 전체 게임</a><a class="cat" href="../omok/index.html">⚫ 오목</a><a class="cat" href="index.html">🐂 버팔로 체스</a><a class="cat" href="../../index.html#popular">🔥 인기</a><a class="cat" href="../../index.html#collections">➕ 더보기</a></div></nav>
+  <section class="game-hero"><div class="container"><div class="game-title-block"><h1>버팔로 체스</h1><p>버팔로는 전진, 카우보이는 사냥, 사냥개는 길막. TSX 빌드 없이 HTML로 바로 실행됩니다.</p><div class="hero-badges"><span class="badge">AI 대전</span><span class="badge">2인 로컬</span><span class="badge">전략 보드</span></div></div><div class="hero-icon">🐂</div></div></section>
+
+  <main class="game-layout">
+    <aside class="panel">
+      <h2>대국 설정</h2>
+      <div class="status-card"><small>현재 차례</small><strong id="turnText">버팔로 턴</strong><div class="turn-badge"><span class="dot"></span><span id="turnHint">전진할 버팔로를 선택하세요</span></div></div>
+      <div class="status-card"><small>게임 모드</small><div class="segmented"><button class="btn active" id="modeAI">AI 대전</button><button class="btn" id="modeLocal">2인 로컬</button></div><small>내 진영</small><div class="segmented"><button class="btn active" id="sideBuffalo">버팔로</button><button class="btn" id="sideCowboy">카우보이</button></div><small>AI 난이도</small><div class="segmented three"><button class="btn" id="diffEasy">Easy</button><button class="btn" id="diffMedium">Normal</button><button class="btn active" id="diffHard">Hard</button></div></div>
+      <div class="controls"><button class="btn" id="viewBtn">시점 전환</button><button class="btn primary" id="resetBtn">처음부터 다시</button></div>
+      <p class="side-note"><strong>승리 조건</strong><br>버팔로가 마지막 줄의 마을에 도착하면 버팔로 승리입니다. 버팔로가 더 이상 전진할 수 없으면 카우보이 진영이 승리합니다.</p>
+    </aside>
+    <section class="board-wrap"><div class="board-head"><span id="riverLabel">강 · Buffalo Start</span><span id="thinkingText">준비 완료</span><span id="townLabel">마을 · Goal</span></div><div class="board" id="board" aria-label="버팔로 체스 보드"></div></section>
+    <aside class="panel"><h2>게임 기록</h2><div class="status-card"><small>현재 상태</small><strong id="stateText">진행 중</strong></div><div class="move-list" id="moveList"><div class="empty-log">아직 이동 기록이 없습니다. 말을 선택한 뒤 파란색 칸으로 이동하세요.</div></div><p class="side-note">버팔로는 한 칸 전진만 가능합니다. 사냥개는 중앙 5줄에서 직선/대각선으로 이동하고, 카우보이는 인접 8방향으로 이동하며 버팔로를 잡을 수 있습니다.</p></aside>
+  </main>
+  <dialog id="rulesDialog"><div class="modal-body"><h2>게임 방법</h2><ol class="rules-list"><li><b>버팔로</b>는 강에서 출발해 아래 방향으로 한 칸씩 전진합니다.</li><li><b>카우보이</b>는 8방향 한 칸 이동하며, 인접한 버팔로를 잡을 수 있습니다.</li><li><b>사냥개</b>는 가로·세로·대각선으로 여러 칸 이동하지만 말을 뛰어넘을 수 없습니다.</li><li>카우보이와 사냥개는 강/마을 줄에는 들어갈 수 없습니다.</li><li>버팔로가 마을 줄에 도착하면 버팔로 승리, 버팔로가 모두 막히면 카우보이 승리입니다.</li></ol><div style="display:flex;justify-content:flex-end;margin-top:20px"><button class="btn primary" style="width:auto" id="closeRules">확인</button></div></div></dialog>
+  <dialog id="resultDialog"><div class="modal-body"><p class="result-title" id="resultTitle">승리</p><p style="color:#6b737b;line-height:1.7;margin:0 0 18px" id="resultDesc"></p><div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn" style="width:auto" id="closeResult">닫기</button><button class="btn primary" style="width:auto" id="resultReset">새 게임</button></div></div></dialog>
+  <script>
+
+    const ROWS = 7;
+    const COLS = 11;
+    const PIECES = { EMPTY:0, BUFFALO:1, DOG:2, COWBOY:3 };
+    const SIDES = { BUFFALO:'BUFFALO', COWBOY:'COWBOY' };
+
+    let board = createInitialBoard();
+    let turn = SIDES.BUFFALO;
+    let selectedCell = null;
+    let validMoves = [];
+    let gameMode = 'AI';
+    let aiDifficulty = 'HARD';
+    let playerSide = SIDES.BUFFALO;
+    let viewPerspective = SIDES.BUFFALO;
+    let winner = null;
+    let isAiThinking = false;
+    let moveHistory = [];
+
+    const $ = (id) => document.getElementById(id);
+
+    function createInitialBoard(){
+      const b = Array.from({length:ROWS}, () => Array(COLS).fill(PIECES.EMPTY));
+      for(let c=0;c<COLS;c++) b[0][c] = PIECES.BUFFALO;
+      b[5][3] = PIECES.DOG;
+      b[5][4] = PIECES.DOG;
+      b[5][5] = PIECES.COWBOY;
+      b[5][6] = PIECES.DOG;
+      b[5][7] = PIECES.DOG;
+      return b;
+    }
+
+    function getPieceSide(piece){
+      if(piece === PIECES.BUFFALO) return SIDES.BUFFALO;
+      if(piece === PIECES.DOG || piece === PIECES.COWBOY) return SIDES.COWBOY;
+      return null;
+    }
+
+    function calculateValidMoves(r,c,currentBoard){
+      const piece = currentBoard[r][c];
+      const moves = [];
+      if(piece === PIECES.EMPTY) return moves;
+
+      if(piece === PIECES.BUFFALO){
+        const nr = r + 1;
+        if(nr < ROWS && currentBoard[nr][c] === PIECES.EMPTY) moves.push({r:nr,c});
+      } else if(piece === PIECES.DOG){
+        const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+        for(const [dr,dc] of dirs){
+          let nr = r + dr, nc = c + dc;
+          while(nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS){
+            if(nr === 0 || nr === ROWS - 1) break;
+            if(currentBoard[nr][nc] === PIECES.EMPTY) moves.push({r:nr,c:nc});
+            else break;
+            nr += dr; nc += dc;
+          }
+        }
+      } else if(piece === PIECES.COWBOY){
+        const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+        for(const [dr,dc] of dirs){
+          const nr = r + dr, nc = c + dc;
+          if(nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS){
+            if(nr === 0 || nr === ROWS - 1) continue;
+            const target = currentBoard[nr][nc];
+            if(target === PIECES.EMPTY || target === PIECES.BUFFALO) moves.push({r:nr,c:nc});
+          }
+        }
+      }
+      return moves;
+    }
+
+    function getAllValidMoves(side, currentBoard){
+      const all = [];
+      for(let r=0;r<ROWS;r++){
+        for(let c=0;c<COLS;c++){
+          if(getPieceSide(currentBoard[r][c]) === side){
+            const moves = calculateValidMoves(r,c,currentBoard);
+            if(moves.length) all.push({from:{r,c}, moves});
+          }
+        }
+      }
+      return all;
+    }
+
+    function checkGameStatus(currentBoard){
+      for(let c=0;c<COLS;c++) if(currentBoard[ROWS-1][c] === PIECES.BUFFALO) return SIDES.BUFFALO;
+      if(getAllValidMoves(SIDES.BUFFALO, currentBoard).length === 0) return SIDES.COWBOY;
+      return null;
+    }
+
+    function getRenderCells(){
+      const cells = [];
+      for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) cells.push({r,c});
+      if(viewPerspective === SIDES.BUFFALO) return cells.reverse();
+      return cells;
+    }
+
+    function renderBoard(){
+      const el = $('board');
+      el.innerHTML = '';
+      for(const {r,c} of getRenderCells()){
+        const cell = document.createElement('button');
+        cell.className = 'cell' + (r===0?' river':'') + (r===ROWS-1?' town':'');
+        const isSelected = selectedCell && selectedCell.r === r && selectedCell.c === c;
+        const isValid = validMoves.some(m => m.r === r && m.c === c);
+        if(isSelected) cell.classList.add('selected');
+        if(isValid) cell.classList.add('valid');
+        cell.setAttribute('aria-label', `${r+1}행 ${c+1}열`);
+        const piece = board[r][c];
+        if(piece !== PIECES.EMPTY) cell.innerHTML = renderPiece(piece);
+        cell.addEventListener('click', () => handleCellClick(r,c));
+        el.appendChild(cell);
+      }
+    }
+
+    function renderPiece(piece){
+      if(piece === PIECES.BUFFALO) return `<div class="piece" title="버팔로">${buffaloSvg()}</div>`;
+      if(piece === PIECES.DOG) return `<div class="piece" title="사냥개">${dogSvg()}</div>`;
+      if(piece === PIECES.COWBOY) return `<div class="piece" title="카우보이">${cowboySvg()}</div>`;
+      return '';
+    }
+
+    function buffaloSvg(){
+      return `<svg viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M18 50C18 31 31 18 50 18s32 13 32 32c0 20-15 32-32 32S18 70 18 50Z" fill="#5a3825" stroke="#20130b" stroke-width="5"/>
+        <path d="M25 31C12 25 9 37 15 48" fill="none" stroke="#ead7b7" stroke-width="8" stroke-linecap="round"/>
+        <path d="M75 31c13-6 16 6 10 17" fill="none" stroke="#ead7b7" stroke-width="8" stroke-linecap="round"/>
+        <path d="M36 36c8-9 20-9 28 0" fill="#3b2315"/>
+        <ellipse cx="50" cy="61" rx="17" ry="11" fill="#2b190f"/>
+        <circle cx="42" cy="47" r="4" fill="#fff6e6"/><circle cx="58" cy="47" r="4" fill="#fff6e6"/>
+        <circle cx="45" cy="62" r="2.5" fill="#0d0805"/><circle cx="55" cy="62" r="2.5" fill="#0d0805"/>
+      </svg>`;
+    }
+    function dogSvg(){
+      return `<svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="52" r="30" fill="#8b7351" stroke="#352819" stroke-width="5"/>
+        <path d="M26 31c-12 12-8 27 2 33" fill="#5e4b32" stroke="#352819" stroke-width="4"/>
+        <path d="M74 31c12 12 8 27-2 33" fill="#5e4b32" stroke="#352819" stroke-width="4"/>
+        <ellipse cx="50" cy="64" rx="15" ry="10" fill="#ead7b7"/>
+        <path d="M43 57h14l-7 7Z" fill="#1b130d"/>
+        <circle cx="40" cy="45" r="4" fill="#0e0906"/><circle cx="60" cy="45" r="4" fill="#0e0906"/>
+      </svg>`;
+    }
+    function cowboySvg(){
+      return `<svg viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M14 43c14-8 58-8 72 0-8-10-20-15-36-15S22 33 14 43Z" fill="#a7662d" stroke="#4a2b12" stroke-width="4"/>
+        <path d="M31 38c1-19 37-19 38 0" fill="#7b461d" stroke="#4a2b12" stroke-width="4"/>
+        <circle cx="50" cy="61" r="23" fill="#e9b98a" stroke="#8a5426" stroke-width="4"/>
+        <path d="M31 66c7 17 31 17 38 0" fill="#4a2b12"/>
+        <rect x="37" y="52" width="8" height="4" rx="2" fill="#140c08"/><rect x="55" y="52" width="8" height="4" rx="2" fill="#140c08"/>
+        <path d="M70 48l18-12" stroke="#4d4d4d" stroke-width="5" stroke-linecap="round"/>
+      </svg>`;
+    }
+
+    function handleCellClick(r,c){
+      if(winner || isAiThinking) return;
+      if(gameMode === 'AI' && turn !== playerSide) return;
+
+      const clickedPiece = board[r][c];
+      const clickedSide = getPieceSide(clickedPiece);
+
+      if(selectedCell && validMoves.some(m => m.r === r && m.c === c)){
+        executeMove(selectedCell.r, selectedCell.c, r, c);
+        selectedCell = null;
+        validMoves = [];
+        afterMove();
+        return;
+      }
+
+      if(clickedSide === turn){
+        selectedCell = {r,c};
+        validMoves = calculateValidMoves(r,c,board);
+      } else {
+        selectedCell = null;
+        validMoves = [];
+      }
+      renderAll();
+    }
+
+    function executeMove(fromR, fromC, toR, toC){
+      const piece = board[fromR][fromC];
+      const captured = board[toR][toC];
+      board[fromR][fromC] = PIECES.EMPTY;
+      board[toR][toC] = piece;
+      moveHistory.push({piece, from:{r:fromR,c:fromC}, to:{r:toR,c:toC}, captured, side:turn});
+      turn = turn === SIDES.BUFFALO ? SIDES.COWBOY : SIDES.BUFFALO;
+    }
+
+    function afterMove(){
+      winner = checkGameStatus(board);
+      renderAll();
+      if(winner){
+        showResult();
+        return;
+      }
+      maybeRunAi();
+    }
+
+    function maybeRunAi(){
+      if(gameMode === 'AI' && turn !== playerSide && !winner){
+        isAiThinking = true;
+        renderAll();
+        setTimeout(() => {
+          makeAiMove();
+          isAiThinking = false;
+          afterMove();
+        }, 520);
+      }
+    }
+
+    function makeAiMove(){
+      const aiSide = playerSide === SIDES.BUFFALO ? SIDES.COWBOY : SIDES.BUFFALO;
+      const movesList = getAllValidMoves(aiSide, board);
+      if(!movesList.length) return;
+      let selectedPlay = null;
+      if(aiDifficulty === 'EASY'){
+        if(Math.random() < .25){
+          const p = movesList[Math.floor(Math.random()*movesList.length)];
+          selectedPlay = {from:p.from, to:p.moves[Math.floor(Math.random()*p.moves.length)]};
+        } else selectedPlay = findHeuristicMove(aiSide, movesList, 1);
+      } else if(aiDifficulty === 'MEDIUM'){
+        selectedPlay = findHeuristicMove(aiSide, movesList, 2);
+      } else {
+        selectedPlay = findMinimaxMove(aiSide, board, 3);
+      }
+      if(selectedPlay) executeMove(selectedPlay.from.r, selectedPlay.from.c, selectedPlay.to.r, selectedPlay.to.c);
+    }
+
+    function evaluatePosition(evalSide, currentBoard){
+      let score = 0, cowboyPos = null, dogs = [], buffaloes = [];
+      for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+        const p = currentBoard[r][c];
+        if(p === PIECES.COWBOY) cowboyPos = {r,c};
+        else if(p === PIECES.DOG) dogs.push({r,c});
+        else if(p === PIECES.BUFFALO) buffaloes.push({r,c});
+      }
+      if(evalSide === SIDES.BUFFALO){
+        buffaloes.forEach(b => {
+          score += Math.pow(b.r, 2.5) * 20;
+          if(cowboyPos && Math.abs(b.r-cowboyPos.r)<=1 && Math.abs(b.c-cowboyPos.c)<=1) score -= 250;
+          if(dogs.some(d => d.r === b.r + 1 && d.c === b.c)) score -= 60;
+        });
+        score += buffaloes.length * 100;
+      } else {
+        const dogCols = dogs.map(d => d.c);
+        score += new Set(dogCols).size * 40;
+        const colCounts = {};
+        dogCols.forEach(c => colCounts[c] = (colCounts[c] || 0) + 1);
+        Object.values(colCounts).forEach(count => { if(count > 1) score -= (count - 1) * 90; });
+        buffaloes.forEach(b => {
+          score -= Math.pow(b.r, 2.9) * 25;
+          dogs.forEach(d => {
+            if(d.c === b.c){
+              const distance = d.r - b.r;
+              if(distance === 1) score += 90;
+              else if(distance === 2) score += 65;
+              else if(distance < 0) score -= 30;
+            }
+          });
+          if(cowboyPos && Math.abs(b.r-cowboyPos.r)<=1 && Math.abs(b.c-cowboyPos.c)<=1) score += 180;
+        });
+        score += (11 - buffaloes.length) * 300;
+      }
+      return score;
+    }
+
+    function findHeuristicMove(side, movesList, depth){
+      let bestMove = null, bestScore = -Infinity;
+      for(const piece of movesList){
+        for(const to of piece.moves){
+          const temp = board.map(row => [...row]);
+          temp[to.r][to.c] = temp[piece.from.r][piece.from.c];
+          temp[piece.from.r][piece.from.c] = PIECES.EMPTY;
+          let score = evaluatePosition(side, temp);
+          if(depth === 2){
+            const enemy = side === SIDES.BUFFALO ? SIDES.COWBOY : SIDES.BUFFALO;
+            let danger = 0;
+            getAllValidMoves(enemy, temp).forEach(p => p.moves.forEach(m => {
+              if(enemy === SIDES.BUFFALO && m.r === ROWS - 1) danger += 600;
+              if(enemy === SIDES.COWBOY && temp[m.r][m.c] === PIECES.BUFFALO) danger += 150;
+            }));
+            score -= danger;
+          }
+          if(score > bestScore){ bestScore = score; bestMove = {from:piece.from, to}; }
+        }
+      }
+      return bestMove;
+    }
+
+    function findMinimaxMove(aiSide, currentBoard, maxDepth){
+      let bestMove = null, bestValue = -Infinity, alpha = -Infinity, beta = Infinity;
+      const moves = getAllValidMoves(aiSide, currentBoard);
+      for(const piece of moves){
+        for(const to of piece.moves){
+          const next = currentBoard.map(row => [...row]);
+          next[to.r][to.c] = next[piece.from.r][piece.from.c];
+          next[piece.from.r][piece.from.c] = PIECES.EMPTY;
+          const value = minimax(next, maxDepth-1, alpha, beta, false, aiSide);
+          if(value > bestValue){ bestValue = value; bestMove = {from:piece.from, to}; }
+          alpha = Math.max(alpha, value);
+        }
+      }
+      return bestMove;
+    }
+
+    function minimax(tempBoard, depth, alpha, beta, isMaximizing, aiSide){
+      for(let c=0;c<COLS;c++){
+        if(tempBoard[ROWS-1][c] === PIECES.BUFFALO) return aiSide === SIDES.BUFFALO ? 10000 + depth : -10000 - depth;
+      }
+      const enemy = aiSide === SIDES.BUFFALO ? SIDES.COWBOY : SIDES.BUFFALO;
+      const active = isMaximizing ? aiSide : enemy;
+      const moves = getAllValidMoves(active, tempBoard);
+      if(!moves.length) return aiSide === SIDES.COWBOY ? 10000 + depth : -10000 - depth;
+      if(depth === 0) return evaluatePosition(aiSide, tempBoard);
+
+      if(isMaximizing){
+        let maxEval = -Infinity;
+        outer: for(const piece of moves){
+          for(const to of piece.moves){
+            const next = tempBoard.map(row => [...row]);
+            next[to.r][to.c] = next[piece.from.r][piece.from.c];
+            next[piece.from.r][piece.from.c] = PIECES.EMPTY;
+            maxEval = Math.max(maxEval, minimax(next, depth-1, alpha, beta, false, aiSide));
+            alpha = Math.max(alpha, maxEval);
+            if(beta <= alpha) break outer;
+          }
+        }
+        return maxEval;
+      } else {
+        let minEval = Infinity;
+        outer: for(const piece of moves){
+          for(const to of piece.moves){
+            const next = tempBoard.map(row => [...row]);
+            next[to.r][to.c] = next[piece.from.r][piece.from.c];
+            next[piece.from.r][piece.from.c] = PIECES.EMPTY;
+            minEval = Math.min(minEval, minimax(next, depth-1, alpha, beta, true, aiSide));
+            beta = Math.min(beta, minEval);
+            if(beta <= alpha) break outer;
+          }
+        }
+        return minEval;
+      }
+    }
+
+    function renderStatus(){
+      $('turnText').textContent = turn === SIDES.BUFFALO ? '버팔로 턴' : '카우보이 / 사냥개 턴';
+      $('turnHint').textContent = isAiThinking ? 'AI가 수를 계산 중입니다' : (turn === SIDES.BUFFALO ? '전진할 버팔로를 선택하세요' : '카우보이 또는 사냥개를 선택하세요');
+      $('thinkingText').textContent = isAiThinking ? 'AI Thinking...' : 'Ready';
+      $('stateText').textContent = winner ? (winner === SIDES.BUFFALO ? '버팔로 승리' : '카우보이 승리') : '진행 중';
+      setActive('modeAI', gameMode === 'AI');
+      setActive('modeLocal', gameMode === 'LOCAL');
+      setActive('sideBuffalo', playerSide === SIDES.BUFFALO);
+      setActive('sideCowboy', playerSide === SIDES.COWBOY);
+      setActive('diffEasy', aiDifficulty === 'EASY');
+      setActive('diffMedium', aiDifficulty === 'MEDIUM');
+      setActive('diffHard', aiDifficulty === 'HARD');
+    }
+    function setActive(id, active){ $(id).classList.toggle('active', active); }
+
+    function renderMoves(){
+      const list = $('moveList');
+      if(!moveHistory.length){
+        list.innerHTML = '<div class="empty-log">아직 이동 기록이 없습니다. 말을 선택한 뒤 초록색 칸으로 이동하세요.</div>';
+        return;
+      }
+      list.innerHTML = moveHistory.map((m,i) => {
+        const name = m.piece === PIECES.BUFFALO ? '버팔로' : m.piece === PIECES.DOG ? '사냥개' : '카우보이';
+        const cap = m.captured === PIECES.BUFFALO ? ' · 포획' : '';
+        return `<div class="move-item"><span>${String(i+1).padStart(2,'0')}. ${name}${cap}</span><span>${coord(m.from)} → ${coord(m.to)}</span></div>`;
+      }).join('');
+      list.scrollTop = list.scrollHeight;
+    }
+    function coord(pos){ return String.fromCharCode(65 + pos.c) + (pos.r + 1); }
+
+    function renderAll(){
+      renderBoard();
+      renderStatus();
+      renderMoves();
+    }
+
+    function showResult(){
+      $('resultTitle').textContent = winner === SIDES.BUFFALO ? '버팔로 승리!' : '카우보이 승리!';
+      $('resultDesc').textContent = winner === SIDES.BUFFALO
+        ? '버팔로가 방어망을 뚫고 마을에 도착했습니다.'
+        : '카우보이와 사냥개가 모든 버팔로의 전진로를 봉쇄했습니다.';
+      $('resultDialog').showModal();
+    }
+
+    function resetGame(){
+      board = createInitialBoard();
+      turn = SIDES.BUFFALO;
+      selectedCell = null;
+      validMoves = [];
+      winner = null;
+      isAiThinking = false;
+      moveHistory = [];
+      renderAll();
+      maybeRunAi();
+    }
+
+    function setMode(mode){
+      gameMode = mode;
+      if(mode === 'LOCAL') playerSide = SIDES.BUFFALO;
+      resetGame();
+    }
+    function setPlayerSide(side){
+      playerSide = side;
+      viewPerspective = side;
+      resetGame();
+    }
+    function setDifficulty(diff){
+      aiDifficulty = diff;
+      renderAll();
+    }
+
+    $('modeAI').addEventListener('click', () => setMode('AI'));
+    $('modeLocal').addEventListener('click', () => setMode('LOCAL'));
+    $('sideBuffalo').addEventListener('click', () => setPlayerSide(SIDES.BUFFALO));
+    $('sideCowboy').addEventListener('click', () => setPlayerSide(SIDES.COWBOY));
+    $('diffEasy').addEventListener('click', () => setDifficulty('EASY'));
+    $('diffMedium').addEventListener('click', () => setDifficulty('MEDIUM'));
+    $('diffHard').addEventListener('click', () => setDifficulty('HARD'));
+    $('viewBtn').addEventListener('click', () => { viewPerspective = viewPerspective === SIDES.BUFFALO ? SIDES.COWBOY : SIDES.BUFFALO; renderAll(); });
+    $('resetBtn').addEventListener('click', resetGame);
+    $('resetBtnTop').addEventListener('click', resetGame);
+    $('rulesBtn').addEventListener('click', () => $('rulesDialog').showModal());
+    $('closeRules').addEventListener('click', () => $('rulesDialog').close());
+    $('closeResult').addEventListener('click', () => $('resultDialog').close());
+    $('resultReset').addEventListener('click', () => { $('resultDialog').close(); resetGame(); });
+
+    renderAll();
+    maybeRunAi();
+  
+  </script>
+</body>
+</html>
