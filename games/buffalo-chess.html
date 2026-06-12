@@ -38,6 +38,35 @@
       .piece{width:58px;height:58px}
     }
 
+
+    /* Board-first layout: keep the board wide, move settings/history below it */
+    .game-layout{
+      width:min(1160px, calc(100% - 32px));
+      margin:34px auto 72px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      grid-template-areas:
+        "board board"
+        "settings history";
+      gap:22px;
+      align-items:start;
+    }
+    .game-layout > aside:first-of-type{grid-area:settings}
+    .game-layout > .board-wrap{grid-area:board}
+    .game-layout > aside:last-of-type{grid-area:history}
+    .board-wrap{overflow-x:auto;overscroll-behavior-x:contain}
+    .board{margin:0 auto}
+    @media(max-width:760px){
+      .game-layout{
+        width:calc(100% - 24px);
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "board"
+          "settings"
+          "history";
+      }
+    }
+
   </style>
 </head>
 <body>
