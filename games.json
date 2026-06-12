@@ -1,0 +1,63 @@
+[
+  {
+    "id": "omok",
+    "title": "스마트 오목 AI",
+    "shortTitle": "오목",
+    "englishName": "omok",
+    "emoji": "⚫",
+    "category": "보드게임",
+    "tags": [
+      "board",
+      "ai",
+      "strategy"
+    ],
+    "meta": "AI 대전 · 렌주룰 · 기보 저장",
+    "description": "흑돌 금수 표시와 난이도 선택을 지원하는 AI 오목 게임입니다.",
+    "url": "games/omok.html",
+    "thumb": "wood",
+    "status": "live",
+    "rank": 1,
+    "price": "무료 플레이"
+  },
+  {
+    "id": "buffalo-chess",
+    "title": "버팔로 체스",
+    "shortTitle": "버팔로 체스",
+    "englishName": "buffalo-chess",
+    "emoji": "🐂",
+    "category": "보드게임",
+    "tags": [
+      "board",
+      "ai",
+      "local",
+      "strategy"
+    ],
+    "meta": "전략 보드 · AI 대전 · 2인 로컬",
+    "description": "버팔로와 카우보이·사냥개 진영이 대결하는 전략 보드게임입니다.",
+    "url": "games/buffalo-chess.html",
+    "thumb": "blue",
+    "status": "live",
+    "rank": 2,
+    "price": "무료 플레이"
+  },
+  {
+    "id": "tetris",
+    "title": "테트리스",
+    "shortTitle": "테트리스",
+    "englishName": "tetris",
+    "emoji": "🧱",
+    "category": "퍼즐",
+    "tags": [
+      "puzzle",
+      "classic",
+      "keyboard"
+    ],
+    "meta": "블록 퍼즐 · 최고점수 저장 · 모바일 버튼",
+    "description": "방향키와 모바일 버튼으로 즐기는 클래식 블록 퍼즐 게임입니다.",
+    "url": "games/tetris.html",
+    "thumb": "green",
+    "status": "live",
+    "rank": 3,
+    "price": "무료 플레이"
+  }
+]
