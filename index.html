@@ -3,140 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game Trip | 웹 보드게임 허브</title>
-  <meta name="description" content="오목, 버팔로 체스 등 웹에서 바로 즐기는 게임 허브" />
+  <title>GameTrip | 웹 게임 허브</title>
+  <meta name="description" content="오목, 버팔로 체스, 테트리스 등 웹에서 바로 즐기는 HTML 게임 허브" />
   <style>
     :root{
-      --blue:#2f8ff0;
-      --blue-dark:#1874d1;
-      --blue-soft:#eaf4ff;
-      --sky:#18b7d7;
-      --text:#141719;
-      --sub:#495056;
-      --muted:#848c94;
-      --line:#e9ecef;
-      --bg:#ffffff;
-      --soft:#f5f7f9;
-      --card:#ffffff;
-      --shadow:0 10px 28px rgba(20,23,25,.08);
-      --radius:20px;
+      --blue:#2f8ff0;--blue-dark:#1874d1;--blue-soft:#eaf4ff;--sky:#18b7d7;
+      --text:#141719;--sub:#495056;--muted:#848c94;--line:#e9ecef;--bg:#fff;--soft:#f5f7f9;--card:#fff;
+      --shadow:0 10px 28px rgba(20,23,25,.08);--radius:20px;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR","Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
-    a{text-decoration:none;color:inherit}
-    button,input{font-family:inherit}
-    .container{width:min(1072px, calc(100% - 32px));margin:0 auto}
-    .top-header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:50}
-    .header-row{height:84px;display:grid;grid-template-columns:160px minmax(240px,1fr) 240px;align-items:center;gap:24px}
-    .logo{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:900;letter-spacing:-.055em}
-    .logo-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#1aa6ff,#2f8ff0);color:#fff;font-size:18px;box-shadow:0 8px 20px rgba(47,143,240,.24)}
-    .search{height:48px;display:flex;align-items:center;gap:12px;background:#f3f5f7;border-radius:8px;padding:0 16px;transition:.2s}
-    .search:focus-within{background:#fff;box-shadow:0 0 0 3px rgba(47,143,240,.14), inset 0 0 0 1px var(--blue)}
-    .search input{border:0;outline:0;background:transparent;width:100%;font-weight:700;color:#333;font-size:15px}
-    .search input::placeholder{color:#8a929a}
-    .account{display:flex;justify-content:flex-end;align-items:center;gap:12px;font-size:14px;font-weight:800;color:#343a40;white-space:nowrap}
-    .login-btn{background:var(--blue);color:#fff;border-radius:12px;padding:14px 22px;font-weight:900;box-shadow:0 8px 18px rgba(47,143,240,.18)}
-    .cat-row{border-bottom:1px solid var(--line);background:#fff}
-    .categories{height:58px;display:flex;align-items:center;gap:28px;overflow:auto;white-space:nowrap;scrollbar-width:none}
-    .categories::-webkit-scrollbar{display:none}
-    .cat{display:flex;align-items:center;gap:8px;font-weight:800;color:#343a40;font-size:15px}
-    .cat span:first-child{font-size:21px}
-    .sub-row{border-bottom:1px solid var(--line);background:#fff}
-    .tabs{height:48px;display:flex;align-items:center;gap:28px;font-size:14px;font-weight:800;color:#848c94;overflow:auto;white-space:nowrap;scrollbar-width:none}
-    .tabs a.active{color:#141719;position:relative}
-    .tabs a.active:after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:3px;border-radius:999px;background:#141719}
-    .hero{margin:0;background:linear-gradient(90deg,#17afcf 0%,#3bbdeb 48%,#b8eaf7 100%);min-height:268px;position:relative;overflow:hidden;border-bottom:1px solid #d6edf5}
-    .hero .container{min-height:268px;display:flex;align-items:center;position:relative}
-    .hero-copy{max-width:570px;color:#fff;padding:34px 0}
-    .hero-kicker{font-size:17px;font-weight:900;opacity:.95;margin-bottom:8px}
-    .hero h1{font-size:34px;line-height:1.18;letter-spacing:-.04em;margin:0 0 14px;font-weight:950}
-    .hero h1 em{font-style:normal;color:#fff36b}
-    .hero p{font-size:16px;line-height:1.65;margin:0;opacity:.95;font-weight:600}
-    .hero-art{position:absolute;right:0;bottom:-18px;width:440px;height:246px;opacity:.95}
-    .hero-art .island{position:absolute;right:8px;bottom:0;width:350px;height:104px;border-radius:60% 45% 0 0;background:rgba(255,255,255,.42);filter:blur(.1px)}
-    .hero-art .piece{position:absolute;display:grid;place-items:center;border-radius:30px;background:#fff;box-shadow:0 18px 42px rgba(36,78,98,.18);font-size:56px}
-    .hero-art .p1{width:116px;height:116px;right:218px;bottom:72px;transform:rotate(-8deg)}
-    .hero-art .p2{width:136px;height:136px;right:88px;bottom:38px;transform:rotate(6deg)}
-    .hero-art .p3{width:84px;height:84px;right:12px;bottom:126px;transform:rotate(14deg)}
-    .main{padding:62px 0 84px}
-    .section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
-    .section-title h2{font-size:34px;letter-spacing:-.055em;margin:0;font-weight:950}
-    .section-title p{margin:8px 0 0;color:var(--muted);font-weight:650;line-height:1.5}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
-    .chip{border:0;background:#f1f3f5;color:#343a40;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:900;cursor:pointer}
-    .chip.active{background:#141719;color:#fff}
-    .game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:18px}
-    .rank-card{display:grid;grid-template-columns:96px 34px minmax(0,1fr) auto;gap:18px;align-items:center;border-radius:18px;padding:0 0 2px;background:#fff;transition:.18s}
-    .rank-card:hover{transform:translateY(-2px)}
-    .thumb{width:96px;height:96px;border-radius:10px;display:grid;place-items:center;font-size:44px;background:linear-gradient(135deg,#f4f8ff,#eaf4ff);overflow:hidden;border:1px solid #edf1f5}
-    .thumb.blue{background:linear-gradient(135deg,#d8f2ff,#f4faff)}
-    .thumb.wood{background:linear-gradient(135deg,#f5e4bf,#fff8e9)}
-    .thumb.green{background:linear-gradient(135deg,#e5f8ee,#f8fffb)}
-    .rank{font-size:30px;font-weight:950;color:#111;letter-spacing:-.06em;text-align:center}
-    .game-name{font-size:16px;font-weight:950;margin-bottom:6px;letter-spacing:-.025em;line-height:1.35}
-    .game-meta{font-size:13px;color:var(--muted);font-weight:700;line-height:1.4}
-    .game-price{margin-top:8px;font-size:15px;font-weight:950;color:#111}
-    .play{border:1px solid #dbe4ee;background:#fff;color:var(--blue);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:950;white-space:nowrap}
-    .play:hover{background:var(--blue);border-color:var(--blue);color:#fff}
-    .collections{margin-top:72px}
-    .collection-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-    .collection{height:146px;border-radius:16px;padding:18px;position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow)}
-    .collection b{font-size:20px;letter-spacing:-.04em;z-index:1}.collection small{font-size:13px;opacity:.9;font-weight:800;margin-top:5px;z-index:1}
-    .collection:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.35))}
-    .c1{background:linear-gradient(135deg,#35a8ff,#66d0ff)}.c2{background:linear-gradient(135deg,#ffb64d,#ffdf8a)}.c3{background:linear-gradient(135deg,#4ac982,#97e5bd)}.c4{background:linear-gradient(135deg,#7887ff,#b1b9ff)}
-    .footer{border-top:1px solid var(--line);background:#f8f9fa;padding:34px 0;color:#848c94;font-size:13px;line-height:1.8;font-weight:650}
-    @media(max-width:860px){.header-row{grid-template-columns:1fr;gap:12px;height:auto;padding:16px 0}.account{justify-content:flex-start}.hero-art{display:none}.hero h1{font-size:30px}.game-grid{grid-template-columns:1fr;row-gap:20px}.rank-card{grid-template-columns:86px 28px minmax(0,1fr);}.play{grid-column:3;justify-self:start}.thumb{width:86px;height:86px}.collection-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:520px){.container{width:min(100% - 24px,1072px)}.categories{gap:20px}.section-title h2{font-size:28px}.hero{min-height:236px}.hero .container{min-height:236px}.hero-copy{padding:28px 0}.rank-card{gap:12px}.collection-grid{grid-template-columns:1fr}.account .partner{display:none}}
+    *{box-sizing:border-box} body{margin:0;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR","Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+    a{text-decoration:none;color:inherit} button,input{font-family:inherit} .container{width:min(1072px,calc(100% - 32px));margin:0 auto}
+    .top-header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:50}.header-row{height:84px;display:grid;grid-template-columns:160px minmax(240px,1fr) 240px;align-items:center;gap:24px}
+    .logo{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:950;letter-spacing:-.055em}.logo-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#1aa6ff,#2f8ff0);color:#fff;font-size:18px;box-shadow:0 8px 20px rgba(47,143,240,.24)}
+    .search{height:48px;display:flex;align-items:center;gap:12px;background:#f3f5f7;border-radius:8px;padding:0 16px;transition:.2s}.search:focus-within{background:#fff;box-shadow:0 0 0 3px rgba(47,143,240,.14), inset 0 0 0 1px var(--blue)}.search input{border:0;outline:0;background:transparent;width:100%;font-weight:800;color:#333;font-size:15px}.search input::placeholder{color:#8a929a}
+    .account{display:flex;justify-content:flex-end;align-items:center;gap:12px;font-size:14px;font-weight:850;color:#343a40;white-space:nowrap}.login-btn{background:var(--blue);color:#fff;border-radius:12px;padding:14px 22px;font-weight:950;box-shadow:0 8px 18px rgba(47,143,240,.18)}
+    .cat-row,.sub-row{border-bottom:1px solid var(--line);background:#fff}.categories{height:58px;display:flex;align-items:center;gap:28px;overflow:auto;white-space:nowrap;scrollbar-width:none}.categories::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}.cat{display:flex;align-items:center;gap:8px;font-weight:850;color:#343a40;font-size:15px}.cat span:first-child{font-size:21px}.tabs{height:48px;display:flex;align-items:center;gap:28px;font-size:14px;font-weight:850;color:#848c94;overflow:auto;white-space:nowrap;scrollbar-width:none}.tabs a.active{color:#141719;position:relative}.tabs a.active:after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:3px;border-radius:999px;background:#141719}
+    .hero{margin:0;background:linear-gradient(90deg,#17afcf 0%,#3bbdeb 48%,#b8eaf7 100%);min-height:268px;position:relative;overflow:hidden;border-bottom:1px solid #d6edf5}.hero .container{min-height:268px;display:flex;align-items:center;position:relative}.hero-copy{max-width:570px;color:#fff;padding:34px 0}.hero-kicker{font-size:17px;font-weight:950;opacity:.95;margin-bottom:8px}.hero h1{font-size:34px;line-height:1.18;letter-spacing:-.04em;margin:0 0 14px;font-weight:950}.hero h1 em{font-style:normal;color:#fff36b}.hero p{font-size:16px;line-height:1.65;margin:0;opacity:.95;font-weight:650}.hero-art{position:absolute;right:0;bottom:-18px;width:440px;height:246px;opacity:.95}.hero-art .island{position:absolute;right:8px;bottom:0;width:350px;height:104px;border-radius:60% 45% 0 0;background:rgba(255,255,255,.42)}.hero-art .piece{position:absolute;display:grid;place-items:center;border-radius:30px;background:#fff;box-shadow:0 18px 42px rgba(36,78,98,.18);font-size:56px}.hero-art .p1{width:116px;height:116px;right:218px;bottom:72px;transform:rotate(-8deg)}.hero-art .p2{width:136px;height:136px;right:88px;bottom:38px;transform:rotate(6deg)}.hero-art .p3{width:84px;height:84px;right:12px;bottom:126px;transform:rotate(14deg)}
+    .main{padding:62px 0 84px}.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}.section-title h2{font-size:34px;letter-spacing:-.055em;margin:0;font-weight:950}.section-title p{margin:8px 0 0;color:var(--muted);font-weight:700;line-height:1.5}.count-badge{background:#f1f3f5;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:950;color:#495056}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}.chip{border:0;background:#f1f3f5;color:#343a40;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:950;cursor:pointer}.chip.active{background:#141719;color:#fff}
+    .game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:18px}.rank-card{display:grid;grid-template-columns:96px 34px minmax(0,1fr) auto;gap:18px;align-items:center;border-radius:18px;padding:0 0 2px;background:#fff;transition:.18s}.rank-card:hover{transform:translateY(-2px)}.thumb{width:96px;height:96px;border-radius:10px;display:grid;place-items:center;font-size:44px;background:linear-gradient(135deg,#f4f8ff,#eaf4ff);overflow:hidden;border:1px solid #edf1f5}.thumb.blue{background:linear-gradient(135deg,#d8f2ff,#f4faff)}.thumb.wood{background:linear-gradient(135deg,#f5e4bf,#fff8e9)}.thumb.green{background:linear-gradient(135deg,#e5f8ee,#f8fffb)}.thumb.purple{background:linear-gradient(135deg,#ededff,#fafaff)}.rank{font-size:30px;font-weight:950;color:#111;letter-spacing:-.06em;text-align:center}.game-name{font-size:16px;font-weight:950;margin-bottom:6px;letter-spacing:-.025em;line-height:1.35}.game-meta{font-size:13px;color:var(--muted);font-weight:750;line-height:1.4}.game-price{margin-top:8px;font-size:15px;font-weight:950;color:#111}.play{border:1px solid #dbe4ee;background:#fff;color:var(--blue);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:950;white-space:nowrap}.play:hover{background:var(--blue);border-color:var(--blue);color:#fff}.empty{grid-column:1/-1;border:1px dashed #dbe4ee;background:#fbfcfd;border-radius:18px;padding:34px;text-align:center;color:#848c94;font-weight:850}
+    .collections{margin-top:72px}.collection-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.collection{height:146px;border-radius:16px;padding:18px;position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow)}.collection b{font-size:20px;letter-spacing:-.04em;z-index:1}.collection small{font-size:13px;opacity:.9;font-weight:850;margin-top:5px;z-index:1}.collection:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.35))}.c1{background:linear-gradient(135deg,#35a8ff,#66d0ff)}.c2{background:linear-gradient(135deg,#ffb64d,#ffdf8a)}.c3{background:linear-gradient(135deg,#4ac982,#97e5bd)}.c4{background:linear-gradient(135deg,#7887ff,#b1b9ff)}.footer{border-top:1px solid var(--line);background:#f8f9fa;padding:34px 0;color:#848c94;font-size:13px;line-height:1.8;font-weight:700}
+    @media(max-width:860px){.header-row{grid-template-columns:1fr;gap:12px;height:auto;padding:16px 0}.account{justify-content:flex-start}.hero-art{display:none}.hero h1{font-size:30px}.game-grid{grid-template-columns:1fr;row-gap:20px}.rank-card{grid-template-columns:86px 28px minmax(0,1fr)}.play{grid-column:3;justify-self:start}.thumb{width:86px;height:86px}.collection-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:520px){.container{width:min(100% - 24px,1072px)}.categories{gap:20px}.section-title{align-items:flex-start;flex-direction:column}.section-title h2{font-size:28px}.hero{min-height:236px}.hero .container{min-height:236px}.hero-copy{padding:28px 0}.rank-card{gap:12px}.collection-grid{grid-template-columns:1fr}.account .partner{display:none}}
   </style>
 </head>
 <body>
-  <header class="top-header">
-    <div class="container header-row">
-      <a class="logo" href="index.html" aria-label="Game Trip Home"><span class="logo-mark">G</span><span>GameTrip</span></a>
-      <label class="search" aria-label="게임 검색"><span>🔍</span><input id="searchInput" type="search" placeholder='"오목" "버팔로 체스" 바로 찾기' /></label>
-      <div class="account"><span class="partner">게임 등록 문의</span><a class="login-btn" href="#popular">바로 플레이</a></div>
-    </div>
-  </header>
-  <nav class="cat-row"><div class="container categories">
-    <a class="cat" href="#popular"><span>🎲</span>보드게임</a><a class="cat" href="#popular"><span>🧩</span>퍼즐</a><a class="cat" href="#popular"><span>♟️</span>전략</a><a class="cat" href="#popular"><span>🕹️</span>클래식</a><a class="cat" href="#popular"><span>🤖</span>AI 대전</a><a class="cat" href="#popular"><span>👥</span>2인 로컬</a><a class="cat" href="#popular"><span>🔥</span>인기</a><a class="cat" href="#collections"><span>➕</span>더보기</a>
-  </div></nav>
-  <nav class="sub-row"><div class="container tabs"><a class="active" href="index.html">홈</a><a href="#popular">이번 주 인기</a><a href="#collections">게임 모음</a><a href="games/buffalo-chess/index.html">버팔로 체스</a><a href="games/omok/index.html">오목</a></div></nav>
-  <section class="hero"><div class="container"><div class="hero-copy"><div class="hero-kicker">웹에서 바로 여는 게임 아케이드</div><h1>설치 없이 즐기는<br>전략 게임 모음, <em>지금 플레이!</em></h1><p>오목, 버팔로 체스부터 테트리스와 체커까지. 가볍게 들어와서 바로 시작할 수 있는 웹 게임 허브입니다.</p></div><div class="hero-art" aria-hidden="true"><div class="island"></div><div class="piece p1">🐂</div><div class="piece p2">⚫</div><div class="piece p3">♟️</div></div></div></section>
-  <main class="main">
-    <section class="container" id="popular">
-      <div class="section-title"><div><h2>인기 게임</h2><p>현재 등록된 게임과 곧 추가할 게임을 한눈에 볼 수 있습니다.</p></div></div>
-      <div class="chips"><button class="chip active" data-filter="all">전체</button><button class="chip" data-filter="board">보드게임</button><button class="chip" data-filter="ai">AI 대전</button><button class="chip" data-filter="local">2인 로컬</button><button class="chip" data-filter="soon">준비중</button></div>
-      <div class="game-grid" id="gameGrid">
-        <a class="rank-card" href="games/omok/index.html" data-title="오목 스마트 렌주룰 AI 온라인" data-type="board ai local"><div class="thumb wood">⚫</div><div class="rank">1</div><div><div class="game-name">스마트 오목 아레나</div><div class="game-meta">AI 연습 · 온라인 1대1 · 렌주룰</div><div class="game-price">무료 플레이</div></div><span class="play">입장</span></a>
-        <a class="rank-card" href="games/buffalo-chess/index.html" data-title="버팔로 체스 전략 보드게임 AI 로컬" data-type="board ai local"><div class="thumb blue">🐂</div><div class="rank">2</div><div><div class="game-name">버팔로 체스</div><div class="game-meta">전략 보드 · AI 대전 · 2인 로컬</div><div class="game-price">무료 플레이</div></div><span class="play">입장</span></a>
-        <a class="rank-card" href="#" data-title="테트리스 블록 퍼즐 준비중" data-type="soon"><div class="thumb green">🧱</div><div class="rank">3</div><div><div class="game-name">테트리스</div><div class="game-meta">블록 퍼즐 · 키보드 조작</div><div class="game-price">준비중</div></div><span class="play">예정</span></a>
-        <a class="rank-card" href="#" data-title="체커 클래식 보드게임 준비중" data-type="board soon"><div class="thumb wood">🔴</div><div class="rank">4</div><div><div class="game-name">체커</div><div class="game-meta">클래식 보드 · 로컬 대전</div><div class="game-price">준비중</div></div><span class="play">예정</span></a>
-        <a class="rank-card" href="#" data-title="지뢰찾기 퍼즐 준비중" data-type="soon"><div class="thumb blue">💣</div><div class="rank">5</div><div><div class="game-name">지뢰찾기</div><div class="game-meta">논리 퍼즐 · 기록 경쟁</div><div class="game-price">준비중</div></div><span class="play">예정</span></a>
-        <a class="rank-card" href="#" data-title="스네이크 아케이드 준비중" data-type="soon"><div class="thumb green">🐍</div><div class="rank">6</div><div><div class="game-name">스네이크</div><div class="game-meta">아케이드 · 반응속도</div><div class="game-price">준비중</div></div><span class="play">예정</span></a>
-      </div>
-    </section>
-    <section class="container collections" id="collections">
-      <div class="section-title"><div><h2>게임 모음</h2><p>플레이 방식별로 빠르게 찾아보세요.</p></div></div>
-      <div class="collection-grid"><a class="collection c1" href="#popular"><b>AI와 한 판</b><small>혼자서 바로 시작</small></a><a class="collection c2" href="#popular"><b>전략 보드</b><small>수 싸움 중심 게임</small></a><a class="collection c3" href="#popular"><b>2인 로컬</b><small>친구와 같은 화면</small></a><a class="collection c4" href="#popular"><b>곧 추가 예정</b><small>새 게임 슬롯</small></a></div>
-    </section>
-  </main>
-  <footer class="footer"><div class="container"><b>GameTrip</b><br>GitHub Pages에서 바로 실행되는 HTML 기반 웹 게임 허브입니다. 외부 이미지를 사용하지 않아 업로드 후 경로 오류가 적도록 구성했습니다.</div></footer>
+  <header class="top-header"><div class="container header-row"><a class="logo" href="index.html" aria-label="GameTrip Home"><span class="logo-mark">G</span><span>GameTrip</span></a><label class="search" aria-label="게임 검색"><span>🔍</span><input id="searchInput" type="search" placeholder='"오목" "테트리스" 바로 찾기' /></label><div class="account"><span class="partner">게임 등록 문의</span><a class="login-btn" href="#popular">바로 플레이</a></div></div></header>
+  <nav class="cat-row"><div class="container categories" id="categoryNav"><a class="cat" href="#popular"><span>🎲</span>전체 게임</a><a class="cat" href="#popular"><span>🤖</span>AI 대전</a><a class="cat" href="#popular"><span>🧩</span>퍼즐</a><a class="cat" href="#popular"><span>♟️</span>전략</a><a class="cat" href="#collections"><span>➕</span>더보기</a></div></nav>
+  <nav class="sub-row"><div class="container tabs" id="quickTabs"><a class="active" href="index.html">홈</a><a href="#popular">인기 게임</a><a href="#collections">게임 모음</a></div></nav>
+  <section class="hero"><div class="container"><div class="hero-copy"><div class="hero-kicker">웹에서 바로 여는 게임 아케이드</div><h1>설치 없이 즐기는<br>HTML 게임 모음, <em>지금 플레이!</em></h1><p>게임을 추가할 때마다 메인 페이지 코드를 고치지 않아도 됩니다. 이제 게임 목록은 games.json에서 관리합니다.</p></div><div class="hero-art" aria-hidden="true"><div class="island"></div><div class="piece p1">🐂</div><div class="piece p2">⚫</div><div class="piece p3">🧱</div></div></div></section>
+  <main class="main"><section class="container" id="popular"><div class="section-title"><div><h2>인기 게임</h2><p>games.json에 등록된 게임이 자동으로 표시됩니다.</p></div><span class="count-badge" id="countBadge">게임 불러오는 중</span></div><div class="chips" id="filterChips"><button class="chip active" data-filter="all">전체</button><button class="chip" data-filter="board">보드게임</button><button class="chip" data-filter="ai">AI 대전</button><button class="chip" data-filter="puzzle">퍼즐</button><button class="chip" data-filter="local">2인 로컬</button></div><div class="game-grid" id="gameGrid"><div class="empty">게임 목록을 불러오고 있습니다.</div></div></section><section class="container collections" id="collections"><div class="section-title"><div><h2>게임 모음</h2><p>플레이 방식별로 빠르게 찾아보세요.</p></div></div><div class="collection-grid"><a class="collection c1" href="#popular" data-filter-link="ai"><b>AI와 한 판</b><small>혼자서 바로 시작</small></a><a class="collection c2" href="#popular" data-filter-link="board"><b>전략 보드</b><small>수 싸움 중심 게임</small></a><a class="collection c3" href="#popular" data-filter-link="local"><b>2인 로컬</b><small>친구와 같은 화면</small></a><a class="collection c4" href="#popular" data-filter-link="all"><b>전체 게임</b><small>등록된 게임 보기</small></a></div></section></main>
+  <footer class="footer"><div class="container"><b>GameTrip</b><br>새 게임은 games 폴더에 영문 파일명으로 추가하고, games.json에 목록만 추가하면 메인 페이지에 자동 반영됩니다.</div></footer>
   <script>
+    let games = [];
+    let activeFilter = 'all';
     const searchInput = document.getElementById('searchInput');
-    const cards = [...document.querySelectorAll('.rank-card')];
+    const gameGrid = document.getElementById('gameGrid');
+    const countBadge = document.getElementById('countBadge');
     const chips = [...document.querySelectorAll('.chip')];
-    function applyFilter(type='all'){
-      const q = (searchInput.value || '').trim().toLowerCase();
-      cards.forEach(card=>{
-        const title = card.dataset.title.toLowerCase();
-        const types = card.dataset.type || '';
-        const typeOk = type === 'all' || types.includes(type);
-        const qOk = !q || title.includes(q);
-        card.style.display = typeOk && qOk ? 'grid' : 'none';
-      });
+    const quickTabs = document.getElementById('quickTabs');
+
+    const fallbackGames = [
+      {id:'omok',title:'스마트 오목 AI',shortTitle:'오목',emoji:'⚫',tags:['board','ai','strategy'],meta:'AI 대전 · 렌주룰 · 기보 저장',url:'games/omok.html',thumb:'wood',status:'live',rank:1,price:'무료 플레이'},
+      {id:'buffalo-chess',title:'버팔로 체스',shortTitle:'버팔로 체스',emoji:'🐂',tags:['board','ai','local','strategy'],meta:'전략 보드 · AI 대전 · 2인 로컬',url:'games/buffalo-chess.html',thumb:'blue',status:'live',rank:2,price:'무료 플레이'},
+      {id:'tetris',title:'테트리스',shortTitle:'테트리스',emoji:'🧱',tags:['puzzle','classic','keyboard'],meta:'블록 퍼즐 · 최고점수 저장',url:'games/tetris.html',thumb:'green',status:'live',rank:3,price:'무료 플레이'}
+    ];
+
+    async function loadGames(){
+      try{
+        const response = await fetch('games.json', {cache:'no-store'});
+        if(!response.ok) throw new Error('games.json not found');
+        games = await response.json();
+      }catch(error){
+        console.warn('games.json을 불러오지 못해 기본 목록을 사용합니다.', error);
+        games = fallbackGames;
+      }
+      games.sort((a,b)=>(a.rank || 999)-(b.rank || 999));
+      renderQuickTabs();
+      renderGames();
     }
-    searchInput.addEventListener('input',()=>applyFilter(document.querySelector('.chip.active')?.dataset.filter || 'all'));
-    chips.forEach(chip=>chip.addEventListener('click',()=>{chips.forEach(c=>c.classList.remove('active'));chip.classList.add('active');applyFilter(chip.dataset.filter)}));
+
+    function renderQuickTabs(){
+      const liveGames = games.filter(game => game.status !== 'soon').slice(0, 4);
+      const base = ['<a class="active" href="index.html">홈</a>','<a href="#popular">인기 게임</a>','<a href="#collections">게임 모음</a>'];
+      liveGames.forEach(game => base.push(`<a href="${game.url}">${game.shortTitle || game.title}</a>`));
+      quickTabs.innerHTML = base.join('');
+    }
+
+    function renderGames(){
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const filtered = games.filter(game => {
+        const text = [game.title, game.shortTitle, game.englishName, game.category, game.meta, game.description, ...(game.tags || [])].join(' ').toLowerCase();
+        const filterOk = activeFilter === 'all' || (game.tags || []).includes(activeFilter) || game.category === activeFilter;
+        const searchOk = !q || text.includes(q);
+        return filterOk && searchOk;
+      });
+      countBadge.textContent = `${filtered.length}개 게임`;
+      if(filtered.length === 0){
+        gameGrid.innerHTML = '<div class="empty">검색 조건에 맞는 게임이 없습니다.</div>';
+        return;
+      }
+      gameGrid.innerHTML = filtered.map((game,index)=>{
+        const isSoon = game.status === 'soon';
+        const href = isSoon ? '#' : game.url;
+        const action = isSoon ? '예정' : '입장';
+        const price = game.price || (isSoon ? '준비중' : '무료 플레이');
+        const thumb = game.thumb || 'blue';
+        return `<a class="rank-card" href="${href}" ${isSoon ? 'onclick="return false"' : ''}>
+          <div class="thumb ${thumb}">${game.emoji || '🎮'}</div>
+          <div class="rank">${game.rank || index + 1}</div>
+          <div><div class="game-name">${game.title}</div><div class="game-meta">${game.meta || game.description || ''}</div><div class="game-price">${price}</div></div>
+          <span class="play">${action}</span>
+        </a>`;
+      }).join('');
+    }
+
+    searchInput.addEventListener('input', renderGames);
+    chips.forEach(chip=>chip.addEventListener('click',()=>{
+      chips.forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      renderGames();
+    }));
+    document.querySelectorAll('[data-filter-link]').forEach(link=>link.addEventListener('click',()=>{
+      const target = link.dataset.filterLink;
+      const chip = chips.find(c=>c.dataset.filter === target) || chips[0];
+      chip.click();
+    }));
+    loadGames();
   </script>
 </body>
 </html>
