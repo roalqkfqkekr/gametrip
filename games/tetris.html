@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>테트리스 | GameTrip</title>
+  <style>
+    :root{
+      --blue:#2f8ff0;
+      --blue-dark:#1874d1;
+      --blue-soft:#eaf4ff;
+      --text:#141719;
+      --sub:#495056;
+      --muted:#848c94;
+      --line:#e9ecef;
+      --bg:#ffffff;
+      --soft:#f5f7f9;
+      --card:#ffffff;
+      --shadow:0 10px 28px rgba(20,23,25,.08);
+      --green:#00b894;
+      --red:#ff5b5f;
+      --amber:#ffb340;
+      --purple:#8b7cf6;
+      --cyan:#18b7d7;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR","Segoe UI",sans-serif;color:var(--text);background:#fff}
+    a{text-decoration:none;color:inherit}
+    button,input{font-family:inherit}
+    .container{width:min(1160px, calc(100% - 32px));margin:0 auto}
+    .site-header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:50}
+    .header-row{height:76px;display:grid;grid-template-columns:170px 1fr 340px;align-items:center;gap:24px}
+    .logo{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:950;letter-spacing:-.055em}
+    .logo-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#1aa6ff,#2f8ff0);color:#fff;font-size:18px}
+    .search{height:44px;display:flex;align-items:center;gap:10px;background:#f3f5f7;border-radius:8px;padding:0 14px;color:#848c94;font-weight:800}
+    .search input{border:0;background:transparent;outline:0;width:100%;font-size:14px;font-weight:700}
+    .header-actions{display:flex;justify-content:flex-end;gap:10px;font-weight:850;font-size:14px;color:#495056}
+    .home-link{background:var(--blue);color:#fff;border-radius:11px;padding:12px 18px;font-weight:950}
+    .cat-row{border-bottom:1px solid var(--line);background:#fff}
+    .categories{height:54px;display:flex;align-items:center;gap:26px;overflow:auto;white-space:nowrap;scrollbar-width:none}
+    .categories::-webkit-scrollbar{display:none}
+    .cat{display:flex;gap:8px;align-items:center;font-weight:850;color:#343a40;font-size:14px}
+    .cat:first-child{color:var(--blue)}
+    .game-hero{background:linear-gradient(90deg,#1eb7d3 0%,#3bbdeb 52%,#bfeeff 100%);min-height:176px;border-bottom:1px solid #d6edf5}
+    .game-hero .container{min-height:176px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+    .game-title-block h1{margin:0;font-size:38px;line-height:1.15;letter-spacing:-.055em;color:#fff;font-weight:950}
+    .game-title-block p{margin:10px 0 0;color:rgba(255,255,255,.92);font-size:15px;font-weight:750;line-height:1.6}
+    .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .badge{background:rgba(255,255,255,.9);color:#1874d1;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:950}
+    .hero-icon{font-size:98px;filter:drop-shadow(0 18px 22px rgba(0,80,120,.18))}
+    .game-layout{width:min(1160px, calc(100% - 32px));margin:34px auto 72px;display:grid;grid-template-columns:290px minmax(0,1fr) 290px;gap:22px;align-items:start}
+    .panel,.board-wrap{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .panel{padding:20px}
+    .panel h2{margin:0 0 16px;font-size:18px;letter-spacing:-.035em}
+    .status-card{background:#f8f9fa;border:1px solid #eef1f4;border-radius:14px;padding:16px;margin-bottom:12px}
+    .status-card small{display:block;color:var(--muted);font-size:12px;font-weight:850;margin:12px 0 7px}
+    .status-card small:first-child{margin-top:0}
+    .status-card strong{font-size:18px;letter-spacing:-.035em}
+    .status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #eef1f4;padding:10px 0}
+    .status-row:first-child{padding-top:0}
+    .status-row:last-child{border-bottom:0;padding-bottom:0}
+    .status-row span:first-child{color:var(--muted);font-size:13px;font-weight:850}
+    .status-row span:last-child{font-size:18px;font-weight:950;color:#141719}
+    .turn-badge{display:inline-flex;align-items:center;gap:8px;margin-top:10px;background:var(--blue-soft);color:var(--blue-dark);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:950}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 1.2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .segmented{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+    .btn{border:1px solid #dfe5ec;background:#fff;color:#343a40;border-radius:11px;padding:11px 12px;font-weight:950;cursor:pointer;transition:.16s;text-align:center}
+    .btn:hover{background:#f5f7f9}
+    .btn.active,.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+    .btn.danger{background:#fff;border-color:#ffd6d8;color:#e64347}
+    .btn.danger:hover{background:#fff3f3}
+    .controls{display:grid;gap:8px}
+    .side-note{color:#6b737b;background:#fbfcfd;border:1px solid #edf1f5;border-radius:14px;padding:14px;line-height:1.7;font-size:13px;font-weight:650}
+    .board-wrap{padding:18px;display:flex;flex-direction:column;align-items:center}
+    .board-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#848c94;font-size:12px;font-weight:950;margin-bottom:14px}
+    .board-head span:nth-child(2){color:var(--blue);background:var(--blue-soft);padding:8px 11px;border-radius:999px}
+    .stage{width:min(100%, 430px);border-radius:22px;background:linear-gradient(135deg,#eef8ff,#f8fbff);border:1px solid #d9edf9;padding:18px;display:grid;place-items:center;position:relative}
+    canvas#gameCanvas{width:min(100%,300px);height:auto;display:block;border-radius:14px;background:#f8fbff;border:1px solid #d9e7f1;box-shadow:inset 0 0 0 1px rgba(255,255,255,.72)}
+    .overlay{position:absolute;inset:18px;border-radius:14px;background:rgba(255,255,255,.86);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;opacity:0;pointer-events:none;transition:.16s}
+    .overlay.show{opacity:1;pointer-events:auto}
+    .overlay h3{margin:0 0 8px;font-size:28px;letter-spacing:-.05em}
+    .overlay p{margin:0 0 18px;color:#6b737b;font-weight:700;line-height:1.6}
+    .next-wrap{display:grid;place-items:center;background:#f8f9fa;border:1px solid #eef1f4;border-radius:16px;padding:16px;margin-bottom:12px}
+    canvas#nextCanvas{width:128px;height:128px;background:#fff;border-radius:12px;border:1px solid #edf1f5}
+    .key-grid{display:grid;gap:8px}
+    .key-row{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:center;color:#495056;font-size:13px;font-weight:750}
+    .key{background:#fff;border:1px solid #dfe5ec;border-bottom-width:3px;border-radius:9px;padding:8px 9px;font-size:12px;font-weight:950;color:#343a40;text-align:center}
+    .mobile-pad{display:none;width:100%;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+    .mobile-pad button{min-height:46px;font-size:18px}
+    dialog{border:0;border-radius:18px;box-shadow:0 24px 80px rgba(20,23,25,.22);max-width:520px;width:calc(100% - 32px)}
+    dialog::backdrop{background:rgba(20,23,25,.32);backdrop-filter:blur(6px)}
+    .modal-body{padding:26px}
+    .result-title{margin:0 0 8px;font-size:30px;font-weight:950;letter-spacing:-.05em}
+    .ranking{display:flex;flex-direction:column;gap:8px}
+    .rank-item{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #eef1f4;background:#fbfcfd;border-radius:12px;padding:11px 12px;font-size:13px;font-weight:850;color:#495056}
+    .rank-item b{color:#141719}
+    @media(max-width:980px){.header-row{grid-template-columns:1fr;gap:12px;height:auto;padding:14px 0}.header-actions{justify-content:flex-start}.game-hero .container{align-items:flex-start;flex-direction:column;padding:28px 0}.hero-icon{display:none}.game-layout{grid-template-columns:1fr}.stage{width:min(100%,380px)}.mobile-pad{display:grid}}
+    @media(max-width:520px){.container,.game-layout{width:calc(100% - 24px)}.game-title-block h1{font-size:31px}.categories{gap:18px}.panel,.board-wrap{border-radius:14px;padding:14px}.stage{padding:12px}.overlay{inset:12px}.header-actions{flex-wrap:wrap}.home-link{padding:11px 14px}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="logo" href="../index.html"><span class="logo-mark">G</span><span>GameTrip</span></a>
+      <label class="search"><span>🔍</span><input placeholder='"테트리스" "오목" 검색' /></label>
+      <div class="header-actions">
+        <button class="btn" style="width:auto" id="rulesBtn">조작법</button>
+        <button class="btn primary" style="width:auto" id="resetBtnTop">새 게임</button>
+        <a class="home-link" href="../index.html">메인으로</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="cat-row">
+    <div class="container categories">
+      <a class="cat" href="../index.html">🎲 전체 게임</a>
+      <a class="cat" href="omok.html">⚫ 오목</a>
+      <a class="cat" href="buffalo-chess.html">🐂 버팔로 체스</a>
+      <a class="cat" href="tetris.html">🧱 테트리스</a>
+      <a class="cat" href="../index.html#popular">🔥 인기</a>
+      <a class="cat" href="../index.html#collections">➕ 더보기</a>
+    </div>
+  </nav>
+
+  <section class="game-hero">
+    <div class="container">
+      <div class="game-title-block">
+        <h1>테트리스</h1>
+        <p>떨어지는 블록을 회전하고 쌓아 한 줄을 완성하세요. 설치 없이 HTML 파일 하나로 바로 실행됩니다.</p>
+        <div class="hero-badges"><span class="badge">클래식 퍼즐</span><span class="badge">키보드 조작</span><span class="badge">점수 기록</span></div>
+      </div>
+      <div class="hero-icon">🧱</div>
+    </div>
+  </section>
+
+  <main class="game-layout">
+    <aside class="panel">
+      <h2>게임 정보</h2>
+      <div class="status-card">
+        <div class="status-row"><span>점수</span><span id="scoreText">0</span></div>
+        <div class="status-row"><span>라인</span><span id="linesText">0</span></div>
+        <div class="status-row"><span>레벨</span><span id="levelText">1</span></div>
+        <div class="status-row"><span>최고점수</span><span id="bestText">0</span></div>
+      </div>
+      <div class="status-card">
+        <small>현재 상태</small>
+        <strong id="stateText">시작 대기</strong>
+        <div class="turn-badge"><span class="dot"></span><span id="hintText">시작 버튼을 눌러 플레이하세요</span></div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="startBtn">시작</button>
+        <button class="btn" id="pauseBtn">일시정지</button>
+        <button class="btn danger" id="resetBtn">처음부터 다시</button>
+      </div>
+      <p class="side-note"><strong>점수 규칙</strong><br>한 번에 지운 줄 수가 많을수록 점수가 크게 올라갑니다. 레벨이 오를수록 블록이 더 빠르게 떨어집니다.</p>
+    </aside>
+
+    <section class="board-wrap">
+      <div class="board-head"><span>Classic Puzzle</span><span id="speedText">Level 1</span><span>10 × 20 Board</span></div>
+      <div class="stage">
+        <canvas id="gameCanvas" width="300" height="600" aria-label="테트리스 게임 보드"></canvas>
+        <div class="overlay show" id="overlay">
+          <div>
+            <h3 id="overlayTitle">테트리스</h3>
+            <p id="overlayDesc">키보드 또는 아래 버튼으로 조작합니다.</p>
+            <button class="btn primary" id="overlayStart">게임 시작</button>
+          </div>
+        </div>
+      </div>
+      <div class="mobile-pad" aria-label="모바일 조작 버튼">
+        <button class="btn" id="leftBtn">←</button>
+        <button class="btn" id="rotateBtn">⟳</button>
+        <button class="btn" id="rightBtn">→</button>
+        <button class="btn primary" id="dropBtn">⤓</button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>다음 블록</h2>
+      <div class="next-wrap"><canvas id="nextCanvas" width="128" height="128" aria-label="다음 블록 미리보기"></canvas></div>
+      <h2>조작법</h2>
+      <div class="key-grid">
+        <div class="key-row"><span class="key">← / →</span><span>좌우 이동</span></div>
+        <div class="key-row"><span class="key">↑</span><span>블록 회전</span></div>
+        <div class="key-row"><span class="key">↓</span><span>빠르게 내리기</span></div>
+        <div class="key-row"><span class="key">Space</span><span>즉시 떨어뜨리기</span></div>
+        <div class="key-row"><span class="key">P</span><span>일시정지</span></div>
+      </div>
+      <p class="side-note" style="margin-top:14px">보드 상단까지 블록이 쌓이면 게임이 종료됩니다. GitHub Pages에서 별도 서버 없이 실행됩니다.</p>
+    </aside>
+  </main>
+
+  <dialog id="rulesDialog">
+    <div class="modal-body">
+      <h2>테트리스 조작법</h2>
+      <div class="key-grid" style="margin-top:16px">
+        <div class="key-row"><span class="key">← / →</span><span>블록을 좌우로 움직입니다.</span></div>
+        <div class="key-row"><span class="key">↑</span><span>블록을 회전합니다.</span></div>
+        <div class="key-row"><span class="key">↓</span><span>블록을 한 칸 빠르게 내립니다.</span></div>
+        <div class="key-row"><span class="key">Space</span><span>현재 블록을 바닥까지 즉시 떨어뜨립니다.</span></div>
+        <div class="key-row"><span class="key">P</span><span>일시정지 또는 재개합니다.</span></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:20px"><button class="btn primary" style="width:auto" id="closeRules">확인</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="resultDialog">
+    <div class="modal-body">
+      <p class="result-title">게임 종료</p>
+      <p style="color:#6b737b;line-height:1.7;margin:0 0 18px" id="resultDesc">최종 점수는 0점입니다.</p>
+      <div class="ranking" id="resultStats"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px"><button class="btn" style="width:auto" id="closeResult">닫기</button><button class="btn primary" style="width:auto" id="resultReset">새 게임</button></div>
+    </div>
+  </dialog>
+
+  <script>
+    const COLS = 10;
+    const ROWS = 20;
+    const BLOCK = 30;
+    const COLORS = {
+      I:'#18b7d7', J:'#2f8ff0', L:'#ffb340', O:'#ffd54f', S:'#00b894', T:'#8b7cf6', Z:'#ff5b5f', ghost:'rgba(47,143,240,.16)', grid:'#dbeaf4'
+    };
+    const SHAPES = {
+      I:[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
+      J:[[1,0,0],[1,1,1],[0,0,0]],
+      L:[[0,0,1],[1,1,1],[0,0,0]],
+      O:[[1,1],[1,1]],
+      S:[[0,1,1],[1,1,0],[0,0,0]],
+      T:[[0,1,0],[1,1,1],[0,0,0]],
+      Z:[[1,1,0],[0,1,1],[0,0,0]]
+    };
+    const SCORE_TABLE = [0, 100, 300, 500, 800];
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const nextCanvas = document.getElementById('nextCanvas');
+    const nextCtx = nextCanvas.getContext('2d');
+    const $ = id => document.getElementById(id);
+
+    let board;
+    let current;
+    let next;
+    let bag = [];
+    let score = 0;
+    let lines = 0;
+    let level = 1;
+    let best = Number(localStorage.getItem('gametrip-tetris-best') || 0);
+    let running = false;
+    let paused = false;
+    let gameOver = false;
+    let lastTime = 0;
+    let dropCounter = 0;
+    let dropInterval = 800;
+
+    function createBoard(){ return Array.from({length: ROWS}, () => Array(COLS).fill(null)); }
+
+    function refillBag(){
+      bag = Object.keys(SHAPES);
+      for(let i=bag.length-1;i>0;i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+      }
+    }
+
+    function randomType(){ if(!bag.length) refillBag(); return bag.pop(); }
+
+    function createPiece(type){
+      const matrix = SHAPES[type].map(row => [...row]);
+      return { type, matrix, x: Math.floor(COLS / 2) - Math.ceil(matrix[0].length / 2), y: -1 };
+    }
+
+    function resetGame(){
+      board = createBoard();
+      bag = [];
+      current = createPiece(randomType());
+      next = createPiece(randomType());
+      score = 0;
+      lines = 0;
+      level = 1;
+      dropInterval = 800;
+      running = false;
+      paused = false;
+      gameOver = false;
+      lastTime = 0;
+      dropCounter = 0;
+      updateUI();
+      draw();
+      drawNext();
+      showOverlay('테트리스', '키보드 또는 아래 버튼으로 조작합니다.', true);
+    }
+
+    function startGame(){
+      if(gameOver) resetGame();
+      running = true;
+      paused = false;
+      hideOverlay();
+      updateUI();
+      requestAnimationFrame(update);
+    }
+
+    function togglePause(){
+      if(!running || gameOver) return;
+      paused = !paused;
+      if(paused){
+        showOverlay('일시정지', 'P 키 또는 일시정지 버튼을 눌러 재개하세요.', true, '재개');
+      } else {
+        hideOverlay();
+        requestAnimationFrame(update);
+      }
+      updateUI();
+    }
+
+    function update(time = 0){
+      if(!running || paused || gameOver) return;
+      const delta = time - lastTime;
+      lastTime = time;
+      dropCounter += delta;
+      if(dropCounter > dropInterval){
+        softDrop(false);
+      }
+      draw();
+      requestAnimationFrame(update);
+    }
+
+    function collide(piece, testBoard = board){
+      const m = piece.matrix;
+      for(let r=0;r<m.length;r++){
+        for(let c=0;c<m[r].length;c++){
+          if(!m[r][c]) continue;
+          const x = piece.x + c;
+          const y = piece.y + r;
+          if(x < 0 || x >= COLS || y >= ROWS) return true;
+          if(y >= 0 && testBoard[y][x]) return true;
+        }
+      }
+      return false;
+    }
+
+    function mergePiece(){
+      current.matrix.forEach((row, r) => row.forEach((v, c) => {
+        if(v){
+          const y = current.y + r;
+          const x = current.x + c;
+          if(y >= 0) board[y][x] = current.type;
+        }
+      }));
+    }
+
+    function spawnPiece(){
+      current = next;
+      current.x = Math.floor(COLS / 2) - Math.ceil(current.matrix[0].length / 2);
+      current.y = -1;
+      next = createPiece(randomType());
+      drawNext();
+      if(collide(current)) endGame();
+    }
+
+    function clearLines(){
+      let cleared = 0;
+      outer: for(let r=ROWS-1;r>=0;r--){
+        for(let c=0;c<COLS;c++){
+          if(!board[r][c]) continue outer;
+        }
+        board.splice(r, 1);
+        board.unshift(Array(COLS).fill(null));
+        cleared++;
+        r++;
+      }
+      if(cleared){
+        lines += cleared;
+        score += SCORE_TABLE[cleared] * level;
+        level = Math.floor(lines / 10) + 1;
+        dropInterval = Math.max(110, 820 - (level - 1) * 62);
+        updateUI();
+      }
+    }
+
+    function softDrop(addScore = true){
+      if(!running || paused || gameOver) return;
+      current.y++;
+      if(collide(current)){
+        current.y--;
+        mergePiece();
+        clearLines();
+        spawnPiece();
+      } else if(addScore){
+        score += 1;
+        updateUI();
+      }
+      dropCounter = 0;
+      draw();
+    }
+
+    function hardDrop(){
+      if(!running || paused || gameOver) return;
+      let moved = 0;
+      while(!collide({...current, y: current.y + 1})){
+        current.y++;
+        moved++;
+      }
+      score += moved * 2;
+      mergePiece();
+      clearLines();
+      spawnPiece();
+      dropCounter = 0;
+      updateUI();
+      draw();
+    }
+
+    function movePiece(dir){
+      if(!running || paused || gameOver) return;
+      current.x += dir;
+      if(collide(current)) current.x -= dir;
+      draw();
+    }
+
+    function rotate(matrix){
+      const N = matrix.length;
+      const result = Array.from({length:N}, () => Array(N).fill(0));
+      for(let r=0;r<N;r++) for(let c=0;c<N;c++) result[c][N-1-r] = matrix[r][c];
+      return result;
+    }
+
+    function rotatePiece(){
+      if(!running || paused || gameOver) return;
+      const originalMatrix = current.matrix;
+      const originalX = current.x;
+      current.matrix = rotate(current.matrix);
+      const kicks = [0, -1, 1, -2, 2];
+      for(const kick of kicks){
+        current.x = originalX + kick;
+        if(!collide(current)){ draw(); return; }
+      }
+      current.matrix = originalMatrix;
+      current.x = originalX;
+    }
+
+    function ghostPiece(){
+      const ghost = { ...current, matrix: current.matrix.map(row => [...row]) };
+      while(!collide({...ghost, y: ghost.y + 1})) ghost.y++;
+      return ghost;
+    }
+
+    function drawCell(context, x, y, color, size = BLOCK, alpha = 1){
+      context.save();
+      context.globalAlpha = alpha;
+      const gap = 2;
+      const rx = x * size + gap;
+      const ry = y * size + gap;
+      const w = size - gap * 2;
+      const h = size - gap * 2;
+      context.fillStyle = color;
+      roundRect(context, rx, ry, w, h, 6);
+      context.fill();
+      context.fillStyle = 'rgba(255,255,255,.24)';
+      roundRect(context, rx + 4, ry + 4, w - 8, Math.max(4, h * .22), 4);
+      context.fill();
+      context.restore();
+    }
+
+    function roundRect(context, x, y, w, h, r){
+      context.beginPath();
+      context.moveTo(x + r, y);
+      context.arcTo(x + w, y, x + w, y + h, r);
+      context.arcTo(x + w, y + h, x, y + h, r);
+      context.arcTo(x, y + h, x, y, r);
+      context.arcTo(x, y, x + w, y, r);
+      context.closePath();
+    }
+
+    function drawGrid(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#f8fbff';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = COLORS.grid;
+      ctx.lineWidth = 1;
+      for(let c=0;c<=COLS;c++){
+        ctx.beginPath(); ctx.moveTo(c * BLOCK + .5, 0); ctx.lineTo(c * BLOCK + .5, ROWS * BLOCK); ctx.stroke();
+      }
+      for(let r=0;r<=ROWS;r++){
+        ctx.beginPath(); ctx.moveTo(0, r * BLOCK + .5); ctx.lineTo(COLS * BLOCK, r * BLOCK + .5); ctx.stroke();
+      }
+    }
+
+    function drawMatrix(matrix, offset, context = ctx, size = BLOCK, alpha = 1){
+      matrix.forEach((row, r) => row.forEach((v, c) => {
+        if(v){
+          const y = offset.y + r;
+          const x = offset.x + c;
+          if(y >= 0) drawCell(context, x, y, COLORS[offset.type] || COLORS[current.type], size, alpha);
+        }
+      }));
+    }
+
+    function draw(){
+      drawGrid();
+      board.forEach((row, r) => row.forEach((type, c) => { if(type) drawCell(ctx, c, r, COLORS[type]); }));
+      if(current && !gameOver){
+        const ghost = ghostPiece();
+        drawMatrix(ghost.matrix, {x:ghost.x, y:ghost.y, type:'ghost'}, ctx, BLOCK, 1);
+        drawMatrix(current.matrix, {x:current.x, y:current.y, type:current.type}, ctx, BLOCK, 1);
+      }
+    }
+
+    function drawNext(){
+      nextCtx.clearRect(0,0,nextCanvas.width,nextCanvas.height);
+      nextCtx.fillStyle = '#fff';
+      nextCtx.fillRect(0,0,nextCanvas.width,nextCanvas.height);
+      if(!next) return;
+      const size = 26;
+      const matrix = next.matrix;
+      const w = matrix[0].length * size;
+      const h = matrix.length * size;
+      const ox = Math.floor((nextCanvas.width - w) / 2 / size);
+      const oy = Math.floor((nextCanvas.height - h) / 2 / size);
+      matrix.forEach((row, r) => row.forEach((v, c) => {
+        if(v) drawCell(nextCtx, ox + c, oy + r, COLORS[next.type], size, 1);
+      }));
+    }
+
+    function updateUI(){
+      $('scoreText').textContent = score.toLocaleString('ko-KR');
+      $('linesText').textContent = lines;
+      $('levelText').textContent = level;
+      $('bestText').textContent = best.toLocaleString('ko-KR');
+      $('speedText').textContent = `Level ${level}`;
+      if(gameOver){
+        $('stateText').textContent = '게임 종료';
+        $('hintText').textContent = '새 게임을 시작하세요';
+      } else if(paused){
+        $('stateText').textContent = '일시정지';
+        $('hintText').textContent = '재개 버튼을 누르세요';
+      } else if(running){
+        $('stateText').textContent = '플레이 중';
+        $('hintText').textContent = '라인을 완성하세요';
+      } else {
+        $('stateText').textContent = '시작 대기';
+        $('hintText').textContent = '시작 버튼을 눌러 플레이하세요';
+      }
+      $('startBtn').textContent = running && paused ? '재개' : running ? '플레이 중' : '시작';
+    }
+
+    function showOverlay(title, desc, showButton = true, buttonText = '게임 시작'){
+      $('overlayTitle').textContent = title;
+      $('overlayDesc').textContent = desc;
+      $('overlayStart').style.display = showButton ? 'inline-block' : 'none';
+      $('overlayStart').textContent = buttonText;
+      $('overlay').classList.add('show');
+    }
+    function hideOverlay(){ $('overlay').classList.remove('show'); }
+
+    function endGame(){
+      gameOver = true;
+      running = false;
+      if(score > best){
+        best = score;
+        localStorage.setItem('gametrip-tetris-best', String(best));
+      }
+      updateUI();
+      draw();
+      showOverlay('게임 종료', `최종 점수 ${score.toLocaleString('ko-KR')}점`, true, '다시 시작');
+      $('resultDesc').textContent = `최종 점수는 ${score.toLocaleString('ko-KR')}점입니다.`;
+      $('resultStats').innerHTML = `
+        <div class="rank-item"><span>점수</span><b>${score.toLocaleString('ko-KR')}</b></div>
+        <div class="rank-item"><span>삭제한 줄</span><b>${lines}</b></div>
+        <div class="rank-item"><span>도달 레벨</span><b>${level}</b></div>
+        <div class="rank-item"><span>최고점수</span><b>${best.toLocaleString('ko-KR')}</b></div>
+      `;
+      setTimeout(() => $('resultDialog').showModal(), 250);
+    }
+
+    function handleKey(e){
+      const keys = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Spacebar','p','P'];
+      if(keys.includes(e.key)) e.preventDefault();
+      if(e.key === 'ArrowLeft') movePiece(-1);
+      else if(e.key === 'ArrowRight') movePiece(1);
+      else if(e.key === 'ArrowUp') rotatePiece();
+      else if(e.key === 'ArrowDown') softDrop(true);
+      else if(e.key === ' ' || e.key === 'Spacebar') hardDrop();
+      else if(e.key === 'p' || e.key === 'P') togglePause();
+    }
+
+    document.addEventListener('keydown', handleKey);
+    $('startBtn').addEventListener('click', () => paused ? togglePause() : startGame());
+    $('pauseBtn').addEventListener('click', togglePause);
+    $('resetBtn').addEventListener('click', resetGame);
+    $('resetBtnTop').addEventListener('click', resetGame);
+    $('overlayStart').addEventListener('click', () => paused ? togglePause() : startGame());
+    $('leftBtn').addEventListener('click', () => movePiece(-1));
+    $('rightBtn').addEventListener('click', () => movePiece(1));
+    $('rotateBtn').addEventListener('click', rotatePiece);
+    $('dropBtn').addEventListener('click', hardDrop);
+    $('rulesBtn').addEventListener('click', () => $('rulesDialog').showModal());
+    $('closeRules').addEventListener('click', () => $('rulesDialog').close());
+    $('closeResult').addEventListener('click', () => $('resultDialog').close());
+    $('resultReset').addEventListener('click', () => { $('resultDialog').close(); resetGame(); startGame(); });
+
+    resetGame();
+  </script>
+</body>
+</html>
