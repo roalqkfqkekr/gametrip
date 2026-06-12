@@ -41,6 +41,22 @@
     "price": "무료 플레이"
   },
   {
+  "id": "chess",
+  "title": "체스",
+  "shortTitle": "체스",
+  "englishName": "chess",
+  "emoji": "♟️",
+  "category": "전략",
+  "tags": ["strategy", "board", "local"],
+  "meta": "전략 보드 · 2인 로컬",
+  "description": "체크메이트를 목표로 두는 정통 체스 게임입니다.",
+  "url": "/gametrip/games/chess.html",
+  "thumb": "purple",
+  "status": "live",
+  "rank": 4,
+  "price": "무료 플레이"
+  },
+  {
     "id": "tetris",
     "title": "테트리스",
     "shortTitle": "테트리스",
